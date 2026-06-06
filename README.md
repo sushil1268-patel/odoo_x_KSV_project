@@ -164,7 +164,7 @@ Distributed under the MIT License. See `LICENSE` file for more information.
 
 ## 📧 Contact
 
-**Project Link:** [https://github.com/yourusername/vendorbridge-erp](https://github.com/yourusername/vendorbridge-erp)
+**Project Link:** https://github.com/sushil1268-patel/odoo_x_KSV_project.git
 
 **Demo:** [Live Demo URL](your-demo-link)
 
