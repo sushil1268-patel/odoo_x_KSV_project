@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VendorBridge - Enterprise Procurement ERP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fb;
+            overflow-x: hidden;
+        }
+
+        /* Login Container */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 32px;
+            padding: 48px;
+            width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo {
+            font-size: 52px;
+            margin-bottom: 12px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .login-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .user-info-box {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .user-info-title {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .user-info-line {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .user-info-line:last-child {
+            border-bottom: none;
+        }
+
+        .user-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 15px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .input-modern {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-modern:focus {
+            outline: none;
+            border-color: #1a1a2e;
+            box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(26, 26, 46, 0.3);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 28px 24px;
+            text-align: center;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-item-custom {
+            padding: 12px 20px;
+            margin: 6px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .nav-item-custom i {
+            width: 22px;
+            font-size: 16px;
+        }
+
+        .nav-item-custom:hover {
+            background: #f0f2f5;
+            color: #1a1a2e;
+        }
+
+        .nav-item-custom.active {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 24px 32px;
+        }
+
+        /* Header */
+        .top-header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e8e8e8;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8f9fa;
+            padding: 8px 20px;
+            border-radius: 40px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .role-badge {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .role-md { background: #1a1a2e; color: white; }
+        .role-ceo { background: #e67e22; color: white; }
+        .role-procurement { background: #2980b9; color: white; }
+        .role-vendor { background: #27ae60; color: white; }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            border: 1px solid #e8e8e8;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1a1a2e10, #16213e10);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #1a1a2e;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            overflow-x: auto;
+            border: 1px solid #e8e8e8;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modern-table th {
+            text-align: left;
+            padding: 14px 12px;
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .modern-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 14px;
+        }
+
+        /* Buttons */
+        .btn-sm {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 12px;
+            transition: all 0.2s;
+            margin: 2px;
+        }
+
+        .btn-success { background: #27ae60; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-info { background: #3498db; color: white; }
+        .btn-secondary { background: #95a5a6; color: white; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* Toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+            border-left: 4px solid #27ae60;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e8e8e8;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .main-content { margin-left: 0; }
+            .login-card { width: 90%; padding: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="loginSection" class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">🏢</div>
+                <div class="login-title">VendorBridge</div>
+                <div class="login-subtitle">Enterprise Procurement ERP</div>
+            </div>
+            
+            <div class="user-info-box">
+                <div class="user-info-title">🏢 EXECUTIVE LEADERSHIP</div>
+                <div class="user-info-line">
+                    <div class="user-icon">👑</div>
+                    <div class="user-details">
+                        <div class="user-name">Sushil Patel</div>
+                        <div class="user-role">Managing Director (MD)</div>
+                    </div>
+                </div>
+                <div class="user-info-line">
+                    <div class="user-icon">💼</div>
+                    <div class="user-details">
+                        <div class="user-name">Prins Gajera</div>
+                        <div class="user-role">Chief Executive Officer (CEO)</div>
+                    </div>
+                </div>
+                <div class="user-info-line">
+                    <div class="user-icon">📋</div>
+                    <div class="user-details">
+                        <div class="user-name">Karan Jethava</div>
+                        <div class="user-role">Procurement Officer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="email" id="loginEmail" class="input-modern" placeholder="Email address">
+            </div>
+            <div class="form-group">
+                <input type="password" id="loginPassword" class="input-modern" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <select id="loginRole" class="input-modern">
+                    <option value="md">👑 MD - Sushil Patel</option>
+                    <option value="ceo">💼 CEO - Prins Gajera</option>
+                    <option value="procurement">📋 Procurement Officer - Karan Jethava</option>
+                    <option value="vendor">🏪 Vendor Partner</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="handleLogin()">
+                <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">VendorBridge</div>
+                <p style="font-size: 12px; color: #888; margin-top: 8px;">ERP System</p>
+            </div>
+            <div id="dynamicNav"></div>
+            <div style="padding: 20px; margin-top: auto; position: absolute; bottom: 20px; width: 100%;">
+                <div class="nav-item-custom" onclick="handleLogout()" style="color: #e74c3c;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <div class="user-info-header">
+                    <i class="fas fa-user-circle" style="font-size: 22px; color: #1a1a2e;"></i>
+                    <span class="user-name" id="userNameDisplay"></span>
+                    <span id="roleBadge"></span>
+                </div>
+            </div>
+            <div id="dynamicContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // User Credentials
+        const VALID_USERS = {
+            md: { email: "sushil@vendorbridge.com", password: "sushil@MD123", name: "Sushil Patel", role: "md", displayRole: "MD" },
+            ceo: { email: "prins@vendorbridge.com", password: "prins@CEO123", name: "Prins Gajera", role: "ceo", displayRole: "CEO" },
+            procurement: { email: "karan@vendorbridge.com", password: "karan@PO123", name: "Karan Jethava", role: "procurement", displayRole: "Procurement Officer" }
+        };
+
+        // Vendor credentials
+        const VENDORS_DATA = {
+            "tech@novasolutions.com": { password: "vendor123", name: "TechNova Solutions", id: 1, category: "IT Hardware", gst: "GSTIN123456", phone: "+91 9876543210", address: "Bangalore" },
+            "global@soft.com": { password: "vendor123", name: "GlobalSoft Pvt Ltd", id: 2, category: "Software", gst: "GSTIN789012", phone: "+91 8765432109", address: "Mumbai" },
+            "office@mart.com": { password: "vendor123", name: "OfficeMart", id: 3, category: "Office Supplies", gst: "GSTIN345678", phone: "+91 7654321098", address: "Delhi" }
+        };
+
+        let currentUser = null;
+        let data = {
+            vendors: [],
+            rfqs: [],
+            quotations: [],
+            purchaseOrders: [],
+            invoices: [],
+            activities: []
+        };
+
+        function loadData() {
+            data.vendors = JSON.parse(localStorage.getItem('vendors_erp_final2')) || [];
+            data.rfqs = JSON.parse(localStorage.getItem('rfqs_erp_final2')) || [];
+            data.quotations = JSON.parse(localStorage.getItem('quotations_erp_final2')) || [];
+            data.purchaseOrders = JSON.parse(localStorage.getItem('pos_erp_final2')) || [];
+            data.invoices = JSON.parse(localStorage.getItem('invoices_erp_final2')) || [];
+            data.activities = JSON.parse(localStorage.getItem('activities_erp_final2')) || [];
+
+            if (data.vendors.length === 0) {
+                data.vendors = [
+                    { id: 1, name: "TechNova Solutions", category: "IT Hardware", gst: "GSTIN123456", email: "tech@novasolutions.com", phone: "+91 9876543210", address: "Bangalore", status: "Active", rating: 4.8 },
+                    { id: 2, name: "GlobalSoft Pvt Ltd", category: "Software", gst: "GSTIN789012", email: "global@soft.com", phone: "+91 8765432109", address: "Mumbai", status: "Active", rating: 4.9 },
+                    { id: 3, name: "OfficeMart", category: "Office Supplies", gst: "GSTIN345678", email: "office@mart.com", phone: "+91 7654321098", address: "Delhi", status: "Active", rating: 4.5 }
+                ];
+                saveData();
+            }
+            if (data.rfqs.length === 0) {
+                data.rfqs = [
+                    { id: 101, title: "Laptop Procurement", description: "20 High-performance laptops", quantity: 20, deadline: "2026-02-15", status: "Open", createdAt: "2026-01-01", budget: 2000000 },
+                    { id: 102, title: "Office Furniture", description: "50 Ergonomic chairs", quantity: 50, deadline: "2026-02-20", status: "Open", createdAt: "2026-01-05", budget: 1500000 }
+                ];
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('vendors_erp_final2', JSON.stringify(data.vendors));
+            localStorage.setItem('rfqs_erp_final2', JSON.stringify(data.rfqs));
+            localStorage.setItem('quotations_erp_final2', JSON.stringify(data.quotations));
+            localStorage.setItem('pos_erp_final2', JSON.stringify(data.purchaseOrders));
+            localStorage.setItem('invoices_erp_final2', JSON.stringify(data.invoices));
+            localStorage.setItem('activities_erp_final2', JSON.stringify(data.activities));
+        }
+
+        function addActivity(action) {
+            data.activities.unshift({
+                id: Date.now(),
+                action: action,
+                user: currentUser?.name,
+                role: currentUser?.displayRole,
+                timestamp: new Date().toLocaleString()
+            });
+            saveData();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}" style="color: ${type === 'success' ? '#27ae60' : '#e74c3c'}; margin-right: 10px;"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const selectedRole = document.getElementById('loginRole').value;
+
+            let user = null;
+
+            if (selectedRole === 'md' && email === VALID_USERS.md.email && password === VALID_USERS.md.password) {
+                user = VALID_USERS.md;
+            } else if (selectedRole === 'ceo' && email === VALID_USERS.ceo.email && password === VALID_USERS.ceo.password) {
+                user = VALID_USERS.ceo;
+            } else if (selectedRole === 'procurement' && email === VALID_USERS.procurement.email && password === VALID_USERS.procurement.password) {
+                user = VALID_USERS.procurement;
+            } else if (selectedRole === 'vendor' && VENDORS_DATA[email] && VENDORS_DATA[email].password === password) {
+                user = { 
+                    email: email, 
+                    name: VENDORS_DATA[email].name, 
+                    role: "vendor", 
+                    displayRole: "Vendor", 
+                    vendorId: VENDORS_DATA[email].id,
+                    vendorData: VENDORS_DATA[email]
+                };
+            }
+
+            if (!user) {
+                showToast("Invalid credentials! Please check email and password", "error");
+                return;
+            }
+
+            currentUser = user;
+            addActivity(`${currentUser.name} (${currentUser.displayRole}) logged in`);
+            showToast(`Welcome ${currentUser.name}!`);
+            
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            document.getElementById('userNameDisplay').innerHTML = currentUser.name;
+            
+            let badgeClass = '';
+            if (currentUser.role === 'md') badgeClass = 'role-md';
+            else if (currentUser.role === 'ceo') badgeClass = 'role-ceo';
+            else if (currentUser.role === 'procurement') badgeClass = 'role-procurement';
+            else badgeClass = 'role-vendor';
+            
+            document.getElementById('roleBadge').innerHTML = `<span class="role-badge ${badgeClass}">${currentUser.displayRole}</span>`;
+            
+            renderNavigation();
+            renderDashboard();
+        }
+
+        function handleLogout() {
+            addActivity(`${currentUser.name} logged out`);
+            currentUser = null;
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'flex';
+            showToast('Logged out successfully');
+        }
+
+        function renderNavigation() {
+            const nav = document.getElementById('dynamicNav');
+            let items = [];
+            
+            if (currentUser.role === 'md') {
+                items = [
+                    { icon: 'fa-chart-line', name: 'MD Dashboard', page: 'dashboard' },
+                    { icon: 'fa-users', name: 'Vendor Management', page: 'vendors' },
+                    { icon: 'fa-file-alt', name: 'RFQ Management', page: 'rfqs' },
+                    { icon: 'fa-quote-right', name: 'Quotations', page: 'quotations' },
+                    { icon: 'fa-check-double', name: 'Approvals', page: 'approvals' },
+                    { icon: 'fa-file-invoice', name: 'PO & Invoices', page: 'poinvoices' },
+                    { icon: 'fa-chart-pie', name: 'Strategic Reports', page: 'reports' },
+                    { icon: 'fa-history', name: 'Audit Logs', page: 'activities' },
+                    { icon: 'fa-trophy', name: 'Vendor Performance', page: 'performance' }
+                ];
+            } else if (currentUser.role === 'ceo') {
+                items = [
+                    { icon: 'fa-chart-line', name: 'CEO Dashboard', page: 'dashboard' },
+                    { icon: 'fa-chart-pie', name: 'Business Analytics', page: 'reports' },
+                    { icon: 'fa-check-double', name: 'Final Approvals', page: 'approvals' },
+                    { icon: 'fa-file-invoice', name: 'Financial Overview', page: 'poinvoices' },
+                    { icon: 'fa-history', name: 'Activity Logs', page: 'activities' },
+                    { icon: 'fa-chart-simple', name: 'KPIs & Metrics', page: 'performance' }
+                ];
+            } else if (currentUser.role === 'procurement') {
+                items = [
+                    { icon: 'fa-chart-line', name: 'Procurement Dashboard', page: 'dashboard' },
+                    { icon: 'fa-users', name: 'Vendor Directory', page: 'vendors' },
+                    { icon: 'fa-file-alt', name: 'Create RFQ', page: 'rfqs' },
+                    { icon: 'fa-quote-right', name: 'Compare Quotes', page: 'quotations' },
+                    { icon: 'fa-file-invoice', name: 'Generate PO', page: 'poinvoices' },
+                    { icon: 'fa-history', name: 'My Activities', page: 'activities' },
+                    { icon: 'fa-chart-line', name: 'Procurement Stats', page: 'reports' }
+                ];
+            } else if (currentUser.role === 'vendor') {
+                items = [
+                    { icon: 'fa-chart-line', name: 'Vendor Dashboard', page: 'dashboard' },
+                    { icon: 'fa-file-alt', name: 'Available RFQs', page: 'availablerequest' },
+                    { icon: 'fa-paper-plane', name: 'Submit Quotation', page: 'submitquote' },
+                    { icon: 'fa-file-invoice', name: 'My Orders', page: 'myorders' }
+                ];
+            }
+            
+            nav.innerHTML = items.map(item => `
+                <div class="nav-item-custom" onclick="navigateTo('${item.page}')">
+                    <i class="fas ${item.icon}"></i>
+                    <span>${item.name}</span>
+                </div>
+            `).join('');
+        }
+
+        window.navigateTo = function(page) {
+            const titles = { 
+                dashboard: 'Dashboard', vendors: 'Vendor Management', rfqs: 'RFQ Management', 
+                quotations: 'Quotation Comparison', approvals: 'Approval Workflow', 
+                poinvoices: 'Purchase Orders & Invoices', reports: 'Reports & Analytics', 
+                activities: 'Activity Logs', availablerequest: 'Available RFQs', 
+                submitquote: 'Submit Quotation', myorders: 'My Orders',
+                performance: 'Vendor Performance Metrics'
+            };
+            document.getElementById('pageTitle').innerHTML = titles[page] || page;
+            if (page === 'dashboard') renderDashboard();
+            else if (page === 'vendors') renderVendors();
+            else if (page === 'rfqs') renderRFQs();
+            else if (page === 'quotations') renderQuotations();
+            else if (page === 'approvals') renderApprovals();
+            else if (page === 'poinvoices') renderPOInvoices();
+            else if (page === 'reports') renderReports();
+            else if (page === 'activities') renderActivities();
+            else if (page === 'availablerequest') renderAvailableRFQs();
+            else if (page === 'submitquote') renderSubmitQuote();
+            else if (page === 'myorders') renderMyOrders();
+            else if (page === 'performance') renderPerformance();
+        }
+
+        // MD DASHBOARD
+        function renderDashboard() {
+            if (currentUser.role === 'md') {
+                let totalSpend = data.purchaseOrders.filter(p => p.status === 'approved').reduce((s, p) => s + p.amount, 0);
+                let pendingApprovals = data.purchaseOrders.filter(p => p.status === 'pending').length;
+                
+                let html = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-building"></i></div>
+                            </div>
+                            <div class="stat-value">${data.vendors.length}</div>
+                            <div class="stat-label">Active Vendors</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-file-alt"></i></div>
+                            </div>
+                            <div class="stat-value">${data.rfqs.length}</div>
+                            <div class="stat-label">Open RFQs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-rupee-sign"></i></div>
+                            </div>
+                            <div class="stat-value">₹${(totalSpend/100000).toFixed(1)}L</div>
+                            <div class="stat-label">Total Spend</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-clock"></i></div>
+                            </div>
+                            <div class="stat-value">${pendingApprovals}</div>
+                            <div class="stat-label">Pending Approvals</div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="section-title"><i class="fas fa-chart-line"></i> Procurement Trends</div>
+                        <canvas id="mdChart" style="max-height: 350px;"></canvas>
+                    </div>
+                `;
+                document.getElementById('dynamicContent').innerHTML = html;
+                
+                setTimeout(() => {
+                    const ctx = document.getElementById('mdChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Monthly Spend (₹ Lakhs)',
+                                data: [4.2, 5.1, 4.8, 6.2, 5.5, 7.8],
+                                backgroundColor: '#1a1a2e',
+                                borderRadius: 8
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: true }
+                    });
+                }, 100);
+            } 
+            else if (currentUser.role === 'ceo') {
+                let totalSpend = data.purchaseOrders.filter(p => p.status === 'approved').reduce((s, p) => s + p.amount, 0);
+                let approvalRate = data.purchaseOrders.length > 0 ? ((data.purchaseOrders.filter(p => p.status === 'approved').length / data.purchaseOrders.length) * 100).toFixed(1) : 0;
+                
+                let html = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-chart-line"></i></div>
+                            </div>
+                            <div class="stat-value">₹${(totalSpend/100000).toFixed(1)}L</div>
+                            <div class="stat-label">YTD Spend</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-percent"></i></div>
+                            </div>
+                            <div class="stat-value">${approvalRate}%</div>
+                            <div class="stat-label">Approval Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-trophy"></i></div>
+                            </div>
+                            <div class="stat-value">${data.vendors.filter(v => v.rating >= 4.7).length}</div>
+                            <div class="stat-label">Top Rated Vendors</div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="section-title"><i class="fas fa-chart-pie"></i> Spend Analysis</div>
+                        <canvas id="ceoChart" style="max-height: 350px;"></canvas>
+                    </div>
+                `;
+                document.getElementById('dynamicContent').innerHTML = html;
+                
+                setTimeout(() => {
+                    const ctx = document.getElementById('ceoChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['IT Hardware', 'Software', 'Office Supplies'],
+                            datasets: [{
+                                data: [45, 35, 20],
+                                backgroundColor: ['#1a1a2e', '#e67e22', '#27ae60'],
+                                borderRadius: 8
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: true }
+                    });
+                }, 100);
+            }
+            else if (currentUser.role === 'procurement') {
+                let totalRFQs = data.rfqs.length;
+                let totalQuotes = data.quotations.length;
+                let pendingPOs = data.purchaseOrders.filter(p => p.status === 'pending').length;
+                
+                let html = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-file-alt"></i></div>
+                            </div>
+                            <div class="stat-value">${totalRFQs}</div>
+                            <div class="stat-label">RFQs Created</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-quote-right"></i></div>
+                            </div>
+                            <div class="stat-value">${totalQuotes}</div>
+                            <div class="stat-label">Quotes Received</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-clock"></i></div>
+                            </div>
+                            <div class="stat-value">${pendingPOs}</div>
+                            <div class="stat-label">Pending POs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+                            </div>
+                            <div class="stat-value">${data.vendors.length}</div>
+                            <div class="stat-label">Vendors</div>
+                        </div>
+                    </div>
+                    <div class="form-card">
+                        <div class="section-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <button class="btn-primary" style="width: auto; padding: 12px 24px;" onclick="navigateTo('rfqs')"><i class="fas fa-plus"></i> Create New RFQ</button>
+                            <button class="btn-primary" style="width: auto; padding: 12px 24px; background: #2980b9;" onclick="navigateTo('vendors')"><i class="fas fa-user-plus"></i> Add Vendor</button>
+                            <button class="btn-primary" style="width: auto; padding: 12px 24px; background: #27ae60;" onclick="navigateTo('quotations')"><i class="fas fa-chart-line"></i> Compare Quotes</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="section-title"><i class="fas fa-chart-line"></i> Recent RFQs</div>
+                        <table class="modern-table"><thead><tr><th>RFQ Title</th><th>Quantity</th><th>Budget</th><th>Deadline</th><th>Quotes</th><th>Status</th></tr></thead><tbody>
+                            ${data.rfqs.slice(0, 5).map(r => {
+                                const quoteCount = data.quotations.filter(q => q.rfqId === r.id).length;
+                                return `<tr><td><strong>${r.title}</strong></td><td>${r.quantity}</td><td>₹${(r.budget/1000).toFixed(0)}K</td><td>${r.deadline}</td><td>${quoteCount}</td><td><span style="background: #f39c1220; padding: 4px 12px; border-radius: 20px;">${r.status}</span></td></tr>`;
+                            }).join('')}
+                        </tbody></table>
+                    </div>
+                `;
+                document.getElementById('dynamicContent').innerHTML = html;
+            }
+            else if (currentUser.role === 'vendor') {
+                let myQuotes = data.quotations.filter(q => q.vendorId === currentUser.vendorId).length;
+                let myOrders = data.purchaseOrders.filter(po => po.vendorId === currentUser.vendorId && po.status === 'approved').length;
+                
+                let html = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-file-alt"></i></div>
+                            </div>
+                            <div class="stat-value">${data.rfqs.filter(r => r.status === 'Open').length}</div>
+                            <div class="stat-label">Available RFQs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-quote-right"></i></div>
+                            </div>
+                            <div class="stat-value">${myQuotes}</div>
+                            <div class="stat-label">My Quotations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-icon"><i class="fas fa-box"></i></div>
+                            </div>
+                            <div class="stat-value">${myOrders}</div>
+                            <div class="stat-label">Completed Orders</div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="section-title"><i class="fas fa-info-circle"></i> Welcome ${currentUser.name}</div>
+                        <p style="color: #666; padding: 20px;">Your vendor account is active. You can browse available RFQs and submit quotations to get purchase orders.</p>
+                        <button class="btn-primary" style="width: auto; margin-top: 10px;" onclick="navigateTo('availablerequest')"><i class="fas fa-search"></i> Browse Available RFQs</button>
+                    </div>
+                `;
+                document.getElementById('dynamicContent').innerHTML = html;
+            }
+        }
+
+        function renderVendors() {
+            let html = `
+                <div class="form-card">
+                    <div class="section-title"><i class="fas fa-plus-circle"></i> Add New Vendor</div>
+                    <div class="form-row">
+                        <input type="text" id="venName" class="form-control" placeholder="Company Name">
+                        <input type="text" id="venCategory" class="form-control" placeholder="Category">
+                        <input type="text" id="venGST" class="form-control" placeholder="GST Number">
+                        <input type="email" id="venEmail" class="form-control" placeholder="Email">
+                        <input type="text" id="venPhone" class="form-control" placeholder="Phone">
+                    </div>
+                    <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="addVendor()"><i class="fas fa-save"></i> Register Vendor</button>
+                </div>
+                <div class="table-container">
+                    <div class="section-title"><i class="fas fa-list"></i> Vendor Directory</div>
+                    <table class="modern-table">
+                        <thead><tr><th>Company</th><th>Category</th><th>GST</th><th>Email</th><th>Phone</th><th>Rating</th><th>Status</th></tr></thead>
+                        <tbody>
+                            ${data.vendors.map(v => `<tr><td><strong>${v.name}</strong></td><td>${v.category}</td><td>${v.gst}</td><td>${v.email}</td><td>${v.phone}</td><td>⭐ ${v.rating}</td><td><span style="background: #27ae6020; color: #27ae60; padding: 4px 12px; border-radius: 20px;">${v.status}</span></td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.addVendor = function() {
+            const name = document.getElementById('venName')?.value;
+            if (!name) { showToast('Please enter vendor name', 'error'); return; }
+            data.vendors.push({
+                id: Date.now(), name: name, category: document.getElementById('venCategory')?.value || 'General',
+                gst: document.getElementById('venGST')?.value || 'GSTIN' + Date.now(),
+                email: document.getElementById('venEmail')?.value, phone: document.getElementById('venPhone')?.value,
+                rating: 4.0, status: 'Active'
+            });
+            saveData();
+            addActivity(`Added vendor: ${name}`);
+            showToast(`Vendor ${name} added successfully!`);
+            renderVendors();
+        }
+
+        function renderRFQs() {
+            let html = `
+                <div class="form-card">
+                    <div class="section-title"><i class="fas fa-plus"></i> Create New RFQ</div>
+                    <div class="form-row">
+                        <input type="text" id="rfqTitle" class="form-control" placeholder="RFQ Title">
+                        <textarea id="rfqDesc" class="form-control" placeholder="Description" rows="2"></textarea>
+                        <input type="number" id="rfqQty" class="form-control" placeholder="Quantity">
+                        <input type="number" id="rfqBudget" class="form-control" placeholder="Budget (₹)">
+                        <input type="date" id="rfqDeadline" class="form-control">
+                    </div>
+                    <button class="btn-primary" style="width: auto; padding: 10px 24px;" onclick="createRFQ()"><i class="fas fa-save"></i> Create RFQ</button>
+                </div>
+                <div class="table-container">
+                    <div class="section-title"><i class="fas fa-list"></i> Active RFQs</div>
+                    <table class="modern-table"><thead><tr><th>ID</th><th>Title</th><th>Description</th><th>Qty</th><th>Budget</th><th>Deadline</th><th>Status</th></tr></thead><tbody>
+                        ${data.rfqs.map(r => `<tr><td>#${r.id}</td><td>${r.title}</td><td>${r.description}</td><td>${r.quantity}</td><td>₹${(r.budget/1000).toFixed(0)}K</td><td>${r.deadline}</td><td><span style="background: #f39c1220; padding: 4px 12px; border-radius: 20px;">${r.status}</span></td></tr>`).join('')}
+                    </tbody></table>
+                </div>
+            `;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.createRFQ = function() {
+            const title = document.getElementById('rfqTitle').value;
+            if (!title) { showToast('Please enter RFQ title', 'error'); return; }
+            data.rfqs.push({
+                id: Date.now(), title: title, description: document.getElementById('rfqDesc').value,
+                quantity: parseInt(document.getElementById('rfqQty').value) || 1,
+                budget: parseInt(document.getElementById('rfqBudget').value) || 0,
+                deadline: document.getElementById('rfqDeadline').value, status: 'Open', createdAt: new Date().toISOString()
+            });
+            saveData();
+            addActivity(`Created RFQ: ${title}`);
+            showToast(`RFQ Created Successfully!`);
+            renderRFQs();
+        }
+
+        function renderQuotations() {
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-balance-scale"></i> Quotation Comparison</div><table class="modern-table"><thead><tr><th>RFQ</th><th>Vendor</th><th>Price (₹)</th><th>Delivery</th><th>Rating</th><th>Action</th></tr></thead><tbody>`;
+            if (data.quotations.length === 0) {
+                html += `<tr><td colspan="6" style="text-align: center;">No quotations received yet. Vendors will submit quotes for your RFQs.</td></tr>`;
+            } else {
+                data.quotations.forEach(q => {
+                    const vendor = data.vendors.find(v => v.id === q.vendorId);
+                    html += `<tr><td>RFQ-${q.rfqId}</td><td>${vendor?.name || 'Unknown'}</td><td><strong>₹${q.price.toLocaleString()}</strong></td><td>${q.delivery} days</td><td>⭐ ${vendor?.rating || 4.0}</td><td><button class="btn-sm btn-success" onclick="selectQuotation(${q.id})"><i class="fas fa-check"></i> Select & Create PO</button></td></tr>`;
+                });
+            }
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.selectQuotation = function(quoteId) {
+            const quote = data.quotations.find(q => q.id === quoteId);
+            if (quote) {
+                data.purchaseOrders.push({ id: Date.now(), quoteId: quote.id, vendorId: quote.vendorId, amount: quote.price, status: 'pending', createdAt: new Date().toISOString() });
+                saveData();
+                addActivity(`Created PO from quotation #${quoteId}`);
+                showToast(`Purchase Order Created! Pending Approval.`);
+                renderPOInvoices();
+            }
+        }
+
+        function renderApprovals() {
+            let pending = data.purchaseOrders.filter(po => po.status === 'pending');
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-clock"></i> Pending Approvals (${pending.length})</div><table class="modern-table"><thead><tr><th>PO #</th><th>Amount</th><th>Vendor</th><th>Action</th></tr></thead><tbody>`;
+            if (pending.length === 0) {
+                html += `<tr><td colspan="4" style="text-align: center;">No pending approvals</td></tr>`;
+            } else {
+                pending.forEach(po => {
+                    const vendor = data.vendors.find(v => v.id === po.vendorId);
+                    html += `<tr><td>PO-${po.id}</td><td>₹${po.amount.toLocaleString()}</td><td>${vendor?.name || 'N/A'}</td><td><button class="btn-sm btn-success" onclick="approvePO(${po.id})"><i class="fas fa-thumbs-up"></i> Approve</button> <button class="btn-sm btn-danger" onclick="rejectPO(${po.id})"><i class="fas fa-thumbs-down"></i> Reject</button></td></tr>`;
+                });
+            }
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.approvePO = function(poId) {
+            const po = data.purchaseOrders.find(p => p.id === poId);
+            if (po) {
+                po.status = 'approved';
+                data.invoices.push({ id: Date.now(), poId: po.id, amount: po.amount, vendorId: po.vendorId, date: new Date().toISOString() });
+                saveData();
+                addActivity(`Approved PO #${poId} and generated invoice`);
+                showToast(`PO Approved! Invoice Generated.`);
+                renderApprovals();
+            }
+        }
+
+        window.rejectPO = function(poId) {
+            const po = data.purchaseOrders.find(p => p.id === poId);
+            if (po) { po.status = 'rejected'; saveData(); addActivity(`Rejected PO #${poId}`); showToast(`PO Rejected`, 'error'); renderApprovals(); }
+        }
+
+        function renderPOInvoices() {
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-file-invoice"></i> Purchase Orders & Invoices</div><table class="modern-table"><thead><tr><th>PO #</th><th>Amount</th><th>Status</th><th>Invoice</th><th>Action</th></tr></thead><tbody>`;
+            data.purchaseOrders.forEach(po => {
+                const invoice = data.invoices.find(i => i.poId === po.id);
+                html += `<tr><td>PO-${po.id}</td><td>₹${po.amount.toLocaleString()}</td><td><span style="background: ${po.status === 'approved' ? '#27ae6020' : (po.status === 'pending' ? '#f39c1220' : '#e74c3c20')}; padding: 4px 12px; border-radius: 20px;">${po.status}</span></td>
+                <td>${invoice ? '<i class="fas fa-check-circle" style="color: #27ae60;"></i> Generated' : '-'}</td>
+                <td>${invoice ? `<button class="btn-sm btn-info" onclick="downloadInvoice(${invoice.id})"><i class="fas fa-download"></i> PDF</button> <button class="btn-sm btn-warning" onclick="emailInvoice(${invoice.id})"><i class="fas fa-envelope"></i> Email</button>` : (po.status === 'pending' ? 'Waiting for approval' : '-')}</td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.downloadInvoice = async function(invoiceId) {
+            const invoice = data.invoices.find(i => i.id === invoiceId);
+            const po = data.purchaseOrders.find(p => p.id === invoice.poId);
+            const vendor = data.vendors.find(v => v.id === invoice.vendorId);
+            
+            const invoiceHTML = `
+                <div id="invoicePrint" style="padding: 40px; font-family: 'Inter'; max-width: 800px; margin: auto;">
+                    <div style="text-align: center; border-bottom: 2px solid #1a1a2e; padding-bottom: 20px; margin-bottom: 20px;">
+                        <h1 style="color: #1a1a2e;">VendorBridge</h1>
+                        <p style="color: #666;">Enterprise Procurement ERP</p>
+                        <p>GST: 27AAACA1234A1Z</p>
+                    </div>
+                    <h2 style="color: #1a1a2e;">TAX INVOICE</h2>
+                    <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+                        <div><strong>Invoice No:</strong> INV-${invoice.id}<br><strong>Date:</strong> ${new Date().toLocaleDateString()}<br><strong>PO No:</strong> PO-${po.id}</div>
+                        <div><strong>Due Date:</strong> ${new Date(Date.now() + 15*24*60*60*1000).toLocaleDateString()}</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                        <h3>Bill To:</h3>
+                        <p><strong>${vendor?.name}</strong><br>${vendor?.address || 'N/A'}<br>GST: ${vendor?.gst}<br>Email: ${vendor?.email}</p>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: #1a1a2e; color: white;">
+                            <th style="padding: 12px; text-align: left;">Description</th>
+                            <th style="padding: 12px; text-align: right;">Amount (₹)</th>
+                        </tr>
+                        <tr><td style="padding: 12px; border-bottom: 1px solid #ddd;">Procurement Order Total</td><td style="padding: 12px; text-align: right;">${invoice.amount.toLocaleString()}</td></tr>
+                        <tr style="background: #f8f9fa;"><td style="padding: 12px;"><strong>GST (18%)</strong></td><td style="padding: 12px; text-align: right;"><strong>${(invoice.amount * 0.18).toLocaleString()}</strong></td></tr>
+                        <tr><td style="padding: 12px; font-size: 20px;"><strong>Total Amount</strong></td><td style="padding: 12px; text-align: right; font-size: 24px; font-weight: bold; color: #1a1a2e;">₹${(invoice.amount * 1.18).toLocaleString()}</strong></td></tr>
+                    </table>
+                    <div style="margin-top: 30px; text-align: center; color: #888; font-size: 12px;">
+                        <hr>Thank you for your business! This is a system generated invoice.
+                    </div>
+                </div>
+            `;
+            
+            const element = document.createElement('div');
+            element.innerHTML = invoiceHTML;
+            document.body.appendChild(element);
+            const opt = { margin: 0.5, filename: `Invoice_INV-${invoice.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4' } };
+            html2pdf().set(opt).from(element).save();
+            setTimeout(() => element.remove(), 500);
+            showToast(`Invoice PDF downloaded!`);
+        }
+
+        window.emailInvoice = function(invoiceId) {
+            showToast(`📧 Invoice sent to vendor email successfully!`, 'success');
+            addActivity(`Sent invoice #${invoiceId} via email`);
+        }
+
+        function renderReports() {
+            let totalSpend = data.purchaseOrders.filter(p => p.status === 'approved').reduce((s, p) => s + p.amount, 0);
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-value">₹${(totalSpend/100000).toFixed(1)}L</div><div class="stat-label">Total Spend</div></div>
+                    <div class="stat-card"><div class="stat-value">${data.purchaseOrders.length}</div><div class="stat-label">Total POs</div></div>
+                    <div class="stat-card"><div class="stat-value">${data.invoices.length}</div><div class="stat-label">Invoices</div></div>
+                </div>
+                <div class="table-container">
+                    <div class="section-title"><i class="fas fa-chart-line"></i> Vendor Performance</div>
+                    <table class="modern-table"><thead><tr><th>Vendor</th><th>Orders</th><th>Total Value</th><th>Rating</th></tr></thead><tbody>
+                        ${data.vendors.map(v => {
+                            const orders = data.purchaseOrders.filter(po => po.vendorId === v.id && po.status === 'approved');
+                            const total = orders.reduce((s, po) => s + po.amount, 0);
+                            return `<tr><td>${v.name}</td><td>${orders.length}</td><td>₹${(total/100000).toFixed(1)}L</td><td>⭐ ${v.rating}</td></tr>`;
+                        }).join('')}
+                    </tbody></table>
+                    <button class="btn-primary" style="margin-top: 20px; width: auto;" onclick="exportReport()"><i class="fas fa-download"></i> Export to CSV</button>
+                </div>
+            `;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.exportReport = function() {
+            let csv = "Vendor Name,Orders,Total Value (₹),Rating\n";
+            data.vendors.forEach(v => {
+                const orders = data.purchaseOrders.filter(po => po.vendorId === v.id && po.status === 'approved');
+                const total = orders.reduce((s, po) => s + po.amount, 0);
+                csv += `"${v.name}",${orders.length},${total},${v.rating}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `vendor_report_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            showToast('Report exported!');
+        }
+
+        function renderActivities() {
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-history"></i> Activity Timeline</div><table class="modern-table"><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th></tr></thead><tbody>`;
+            data.activities.slice(0, 30).forEach(a => {
+                html += `<tr><td style="font-size: 12px;">${a.timestamp}</td><td>${a.user}</td><td>${a.role}</td><td>${a.action}</td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        function renderAvailableRFQs() {
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-file-alt"></i> Available RFQs for Bidding</div><table class="modern-table"><thead><tr><th>RFQ Title</th><th>Description</th><th>Quantity</th><th>Budget</th><th>Deadline</th><th>Action</th></tr></thead><tbody>`;
+            data.rfqs.filter(r => r.status === 'Open').forEach(r => {
+                html += `<tr><td><strong>${r.title}</strong></td><td>${r.description}</td><td>${r.quantity}</td><td>₹${(r.budget/1000).toFixed(0)}K</td><td>${r.deadline}</td><td><button class="btn-sm btn-success" onclick="bidOnRFQ(${r.id})"><i class="fas fa-gavel"></i> Submit Quote</button></td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.bidOnRFQ = function(rfqId) {
+            showToast(`Submit your quotation for RFQ #${rfqId}`);
+            navigateTo('submitquote');
+        }
+
+        function renderSubmitQuote() {
+            let html = `
+                <div class="form-card" style="max-width: 600px; margin: 0 auto;">
+                    <div class="section-title"><i class="fas fa-paper-plane"></i> Submit Quotation</div>
+                    <div class="form-group">
+                        <label>Select RFQ</label>
+                        <select id="quoteRFQ" class="form-control">
+                            ${data.rfqs.filter(r => r.status === 'Open').map(r => `<option value="${r.id}">${r.title} - Budget: ₹${(r.budget/1000).toFixed(0)}K</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Price (₹)</label>
+                        <input type="number" id="quotePrice" class="form-control" placeholder="Enter total price">
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Timeline</label>
+                        <input type="text" id="quoteDelivery" class="form-control" placeholder="e.g., 15 days">
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Notes</label>
+                        <textarea id="quoteNotes" class="form-control" rows="3" placeholder="Any terms or conditions..."></textarea>
+                    </div>
+                    <button class="btn-primary" style="width: 100%;" onclick="submitVendorQuote()"><i class="fas fa-send"></i> Submit Quotation</button>
+                </div>
+            `;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        window.submitVendorQuote = function() {
+            const rfqId = parseInt(document.getElementById('quoteRFQ').value);
+            const price = parseFloat(document.getElementById('quotePrice').value);
+            if (!price) { showToast('Please enter a price', 'error'); return; }
+            
+            data.quotations.push({
+                id: Date.now(), rfqId: rfqId, vendorId: currentUser.vendorId,
+                price: price, delivery: document.getElementById('quoteDelivery').value || 'Standard',
+                notes: document.getElementById('quoteNotes').value, submittedAt: new Date().toISOString()
+            });
+            saveData();
+            addActivity(`${currentUser.name} submitted quotation for RFQ ${rfqId}`);
+            showToast(`Quotation submitted successfully!`);
+            navigateTo('dashboard');
+        }
+
+        function renderMyOrders() {
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-box"></i> My Purchase Orders</div><table class="modern-table"><thead><tr><th>PO #</th><th>Amount</th><th>Status</th><th>Invoice</th></tr></thead><tbody>`;
+            data.purchaseOrders.filter(po => po.vendorId === currentUser.vendorId).forEach(po => {
+                const invoice = data.invoices.find(i => i.poId === po.id);
+                html += `<tr><td>PO-${po.id}</td><td>₹${po.amount.toLocaleString()}</td><td><span style="background: ${po.status === 'approved' ? '#27ae6020' : '#f39c1220'}; padding: 4px 12px; border-radius: 20px;">${po.status}</span></td>
+                <td>${invoice ? `<button class="btn-sm btn-info" onclick="downloadInvoice(${invoice.id})"><i class="fas fa-download"></i> PDF</button>` : 'Processing'}</td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        function renderPerformance() {
+            let html = `<div class="table-container"><div class="section-title"><i class="fas fa-trophy"></i> Vendor Performance Metrics</div><table class="modern-table"><thead><tr><th>Rank</th><th>Vendor Name</th><th>Total Orders</th><th>Total Value</th><th>Rating</th><th>Performance</th></tr></thead><tbody>`;
+            let sortedVendors = [...data.vendors].sort((a,b) => b.rating - a.rating);
+            sortedVendors.forEach((v, idx) => {
+                const orders = data.purchaseOrders.filter(po => po.vendorId === v.id && po.status === 'approved');
+                const total = orders.reduce((s, po) => s + po.amount, 0);
+                html += `<tr><td>${idx === 0 ? '🏆' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}`))}</td><td><strong>${v.name}</strong></td><td>${orders.length}</td><td>₹${(total/100000).toFixed(1)}L</td><td>⭐ ${v.rating}</td><td><div style="background: #e0e0e0; border-radius: 10px;"><div style="background: linear-gradient(90deg, #1a1a2e, #16213e); width: ${(v.rating/5)*100}%; padding: 4px; border-radius: 10px; color: white; text-align: center; font-size: 11px;">${((v.rating/5)*100).toFixed(0)}%</div></div></td></tr>`;
+            });
+            html += `</tbody></table></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
