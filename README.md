@@ -166,7 +166,7 @@ Distributed under the MIT License. See `LICENSE` file for more information.
 
 **Project Link:** https://github.com/sushil1268-patel/odoo_x_KSV_project.git
 
-**Demo:** [Live Demo URL]([https://hackathon.odoo.com/hackathon/details/32087](https://drive.google.com/file/d/1m3HtRp1EY-uCODtHzx9Fj6wKdwKnknwP/view?usp=drive_link))
+**Demo:** https://drive.google.com/file/d/1m3HtRp1EY-uCODtHzx9Fj6wKdwKnknwP/view?usp=drive_link
 
 ## 🙏 Acknowledgments
 
