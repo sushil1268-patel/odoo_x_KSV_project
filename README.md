@@ -1,3 +1,7 @@
+# Deployed link of the web site
+
+  link :- https://sushil1268-patel.github.io/odoo_x_KSV_project/
+
 # 🏢 VendorBridge - Enterprise Procurement ERP System
 
 ![Version](https://img.shields.io/badge/version-4.0-blue)
